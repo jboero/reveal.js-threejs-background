@@ -1,247 +1,239 @@
-<!doctype html>  
+<!doctype html>
 <html lang="en">
-	
-	<head>
-		<meta charset="utf-8">
-		
-		<title>reveal.js</title>
 
-		<meta name="description" content="An easy to use CSS 3D slideshow tool for quickly creating good looking HTML presentations.">
-		<meta name="author" content="Hakim El Hattab">
-		
-		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-		
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/main.css">
+  <head>
+    <meta charset="utf-8">
 
-		<link rel="stylesheet" href="lib/zenburn.css">
-	</head>
-	
-	<body>
-		
-		<div id="reveal">
-			
-			<!-- Any section element inside of this container is displayed as a slide -->
-			<div class="slides">
-				<section>
-					<h1>Reveal.js</h1>
-					<h3 class="inverted">A CSS 3D Slideshow</h3>
-					<script>
-						// Delicously hacky. Look away.
-						if( navigator.userAgent.match( /(iPhone|iPad|iPod|Android)/i ) )
-						document.write( '<p style="color: rgba(0,0,0,0.3); text-shadow: none;">('+'Tap to navigate'+')</p>' );
-					</script>
-				</section>
-				
-				<section>
-					<h2>Heads Up</h2>
-					<p>
-						reveal.js is an easy to use, HTML based, presentation tool. You'll need a modern browser with 
-						support for CSS 3D transforms to see it in its full glory.
-					</p>
-					<p>
-						<i><small>- <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small></i>
-					</p>
-				</section>
-				
-				<!-- Example of nested vertical slides -->
-				<section>
-					<section>
-						<h2>Vertical Slides</h2>
-						<p>
-							Slides can be nested inside of other slides,<br/>
-							try pressing <a href="#/2/1">down</a>.
-						</p>
-						<a href="#/2/1" class="image">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png">
-						</a>
-					</section>
-					<section>
-						<h2>Basement Level 1</h2>
-						<p>Press down or up to navigate.</p>
-					</section>
-					<section>
-						<h2>Basement Level 2</h2>
-						<p>Cornify</p>
-						<a class="test" href="http://cornify.com">
-							<img width="280" height="326" src="https://s3.amazonaws.com/hakim-static/reveal-js/cornify.gif">
-						</a>
-					</section>
-					<section>
-						<h2>Basement Level 3</h2>
-						<p>That's it, time to go back up.</p>
-						<a href="#/2" class="image">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" style="-webkit-transform: rotate(180deg);">
-						</a>
-					</section>
-				</section>
+    <title>reveal.js</title>
 
-				<section>
-					<h2>Holistic Overview</h2>
-					<p>
-						Press <strong>SPACE</strong> to enter the slide overview.
-					</p>
-				</section>
+    <meta name="description" content="An easy to use CSS 3D slideshow tool for quickly creating good looking HTML presentations.">
+    <meta name="author" content="Hakim El Hattab">
 
-				<section>
-					<h2>Transition Styles</h2>
-					<p>
-						You can select from different transitions, like:
-					</p>
-					<ul>
-						<li><a href="http://lab.hakim.se/reveal-js/?transition=cube">Cube</a></li>
-						<li><a href="http://lab.hakim.se/reveal-js/?transition=page">Page</a></li>
-						<li><a href="http://lab.hakim.se/reveal-js/?transition=concave">Concave</a></li>
-					</ul>
-				</section>
-					
-				<section>
-					<h2>Marvelous Unordered List</h2>
-					<ul>
-						<li>No order here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-					</ul>
-				</section>
-				
-				<section>
-					<h2>Fantastic Ordered List</h2>
-					<ol>
-						<li>One is smaller than...</li>
-						<li>Two is smaller than...</li>
-						<li>Three!</li>
-					</ol>
-				</section>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 
-				<section>
-					<h2>Clever Quotes</h2>
-					<p>
-						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						The nice thing about standards is that there are so many to choose from</q> and block:
-					</p>
-					<blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						For years there has been a theory that millions of monkeys typing at random on millions of typewriters would 
-						reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.
-					</blockquote>
-				</section>
-				
-				<section>
-					<h2>Pretty Code</h2>
-					<pre><code contenteditable>
-	var supports3DTransforms =  document.body.style['webkitPerspective'] !== undefined || 
-					document.body.style['MozPerspective'] !== undefined ||
-					document.body.style['perspective'] !== undefined;
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
 
-	function linkify( selector ) {
-	    if( supports3DTransforms ) {
-	        
-	        var nodes = document.querySelectorAll( selector );
+    <link rel="stylesheet" href="lib/zenburn.css">
+  </head>
 
-	        for( var i = 0, len = nodes.length; i < len; i++ ) {
-	            var node = nodes[i];
+  <body>
 
-	            if( !node.className || !node.className.match( /roll/g ) ) {
-	                node.className += ' roll';
-	                node.innerHTML = '<span data-title="'+ node.text +'">' + node.innerHTML + '</span>';
-	            }
-	        };
-	    }
-	}
+    <div id="reveal">
 
-	linkify( 'a' );
-					</code></pre>
-					<p>Courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
-				</section>
-				
-				<section>
-					<h2>Intergalactic Interconnections</h2>
-					<p>
-						You can link between slides internally,<br/>
-						<a href="#/2/3">like this</a>.
-					</p>
-				</section>
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section>
+        <h1>Behavior Driven Development</h1>
+        <h3 class="inverted">using RSpec</h3>
+        <script>
+          // Delicously hacky. Look away.
+          if( navigator.userAgent.match( /(iPhone|iPad|iPod|Android)/i ) )
+          document.write( '<p style="color: rgba(0,0,0,0.3); text-shadow: none;">('+'Tap to navigate'+')</p>' );
+        </script>
+        </section>
 
-				<section>
-					<h2>Fragmented Views</h2>
-					<p>Hit the next arrow...</p>
-					<p class="fragment">... to step through ...</p>
-					<ol>
-						<li class="fragment"><code>any type</code></li>
-						<li class="fragment"><em>of view</em></li>
-						<li class="fragment"><strong>fragments</strong></li>
-					</ol>
-				</section>
-				
-				<section>
-					<h2>Spectacular image!</h2>
-					<a class="image" href="http://hakim.se/experiments/html5/breakdom/" target="_blank">
-						<img width="320" height="412" src="https://s3.amazonaws.com/hakim-static/reveal-js/breakdom.png">
-					</a>
-				</section>
-				
-				<section>
-					<h2>Stellar Links</h2>
-					<ul>
-						<li><a href="https://github.com/hakimel/reveal.js">Source code on github</a></li>
-						<li><a href="http://hakim.se/projects/reveal-js">Read more on my site</a></li>
-						<li><a href="http://twitter.com/hakimel">Follow me on Twitter</a></li>
-					</ul>
-				</section>
-				
-				<section>
-					<h1>THE END</h1>
-					<h3 class="inverted">BY Hakim El Hattab / hakim.se</h3>
-				</section>
-			</div>
+        <section>
+        <section>
+        <h2>The Prereq: Test Driven Development</h2>
+        <p>
+        Test driven development (TDD) is a software development process that relies on writing automated tests first, and then following up with writing the implementation. This process is often referred to as *Red-Green-Refactor*:
+        </p>
+        <img width="400px" src="http://reddevnews.com/~/media/ECG/visualstudiomagazine/Images/2007/11/listingsID_148_0711_rdn_tb%20gif.ashx"></img>
+        </section>
+        <section>
+        <h2>Shortcomings of TDD</h2>
+        <p>
+        <i><a href="http://dannorth.net/introducing-bdd/">Dan North</a></i>, the pioneer of BDD, had this to say when using TDD:
+        </p>
+        <blockquote>
+        I had a problem. While using and teaching agile practices like test-driven development (TDD) on projects in different environments, I kept coming across the same confusion and misunderstandings. Programmers wanted to know where to start, what to test and what not to test, how much to test in one go, what to call their tests, and how to understand why a test fails.
+        </blockquote>
+        </section>
+        </section>
 
-			<!-- The navigational controls UI -->
-			<aside class="controls">
-				<a class="left" href="#">&#x25C4;</a>
-				<a class="right" href="#">&#x25BA;</a>
-				<a class="up" href="#">&#x25B2;</a>
-				<a class="down" href="#">&#x25BC;</a>
-			</aside>
+        <section>
+        <section>
+        <h2>What is Behavior Driven Development?</h2>
+        <small>Behavior-driven development (or BDD) is an agile software development technique devised as a response to the issues he encountered with TDD:</small>
+        <br>
+        <ul>
+          <li>Where to start</li>
+          <li>What to test and what not to test</li>
+          <li>How much to test in one go</li>
+          <li>What to call the tests</li>
+          <li>How to understand why a test fails</li>
+        </ul>
+        </section>
+        <section>
+        <h3>1. Test method names should be sentences</h3>
+        <br/>
+        <ul>
+          <li class='fragment'>Test names are whole sentences that include an `actor` and start with the word `should`.</li>
+          <li class='fragment'>Understandable by non-developers, leveraging the <a href="http://domaindrivendesign.org/node/132">ubiquitous language</a> of the domain (everyone uses the same nomenclature).</li>
+        </ul>
+        </section>
 
-			<!-- Displays presentation progress, max value changes via JS to reflect # of slides -->
-			<div class="progress"><span></span></div>
-			
-		</div>
-		
-		<script src="js/reveal.js"></script>
-		<script src="lib/highlight.js"></script>
-		<script>
-			// Parse the query string into a key/value object
-			var query = {};
-			location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) {
-				query[ a.split( '=' ).shift() ] = a.split( '=' ).pop();
-			} );
+        <section>
+        <h3>2. Emphasize behavior over testing</h3>
+        <br/>
+        <ul>
+          <li class='fragment'>Solves the difficult question, "What to test?"</li>
+          <li class='fragment'>Defines an expected set a behavior rather than implementation specific fuctionality..</li>
+        </ul>
+        </section>
+        <section>
+        <h3>3. Every story should have a user facing acceptance criteria. `Outside-in` testing.</h3>
+        <br />
+        <ul>
+          <li class='fragment'>Stakeholders should be able to accept the story using some interface.</li>
+          <li class='fragment'>Allows for quick feedback from stakeholders on whether or not the assumptions about the behavior are correct.</li>
+          <li class='fragment'>Encourages <a href="http://en.wikipedia.org/wiki/You_ain%27t_gonna_need_it">YAGNI</a></li>
+        </ul>
+        </section>
+        </section>
 
-			Reveal.initialize({
-				// Display controls in the bottom right corner
-				controls: true,
+        <section>
+        <section>
+        <h2>The Flow of BDD</h2>
+        <p>
+        To start ouside in, one writes a <strong>request spec</strong> emulating an <strong>actor</strong>.
+        </p>
+        </section>
+        <section>
+        <h3>Request Spec Level</h3>
+        <ol>
+          <li>Write the request spec</li>
+          <li class="fragment">Run said request spec, watch it go <strong style="color:red">red</strong></li>
+          <li class="fragment">Write view implementation of request spec</li>
+          <li class="fragment">Re-run said request spec, watch it still go <strong style="color:red">red</strong></li>
+          <li class="fragment">Dive <i class="inverse">outside-in</i>to controllers</li>
+        </ol>
+        </section>
+        <section>
+        <h3>Controller Spec Level</h3>
+        <ol>
+          <li>Write the controller spec</li>
+          <li class="fragment">Run controller spec, watch it go <strong style="color:red">red</strong></li>
+          <li class="fragment">Write implementation of controller</li>
+          <li class="fragment">Re-run said controller spec, watch it still go <strong style="color:red">red</strong></li>
+          <li class="fragment">Dive <i class="inverse">outside-in</i>to models</li>
+        </ol>
+        </section>
+        <section>
+        <h3>Model Spec Level</h3>
+        <ol>
+          <li>Write the model spec</li>
+          <li class="fragment">Run model spec, watch it go <strong style="color:red">red</strong></li>
+          <li class="fragment">Write implementation of model</li>
+          <li class="fragment">Re-run said model spec, watch it go <strong><i><strong style="color:green">green</strong></i></strong></li>
+          <li class="fragment">Completed inner most implementation, <strong>begin to pop back outside</strong></li>
+        </ol>
+        </section>
+        <section>
+        <h3>Popping back up</h3>
+        <ol>
+          <li>Run the controller spec, refactor code until <strong style="color:green">green</strong>.</li>
+          <li class="fragment">Run the request spec, refactor code until <strong style="color:green">green</strong>.</li>
+          <li class="fragment">You're done!</li>
+        </ol>
+        </section>
+        <section>
+        <h3>Summary</h3>
+        <ol>
+          <li>You now have a user facing, acceptable story, with tests all the way down the stack.</li>
+          <li class="fragment">Only implemented what's needed to get <strong style="color:green">green</strong> (YAGNI).</li>
+          <li class="fragment">Clear demonstration of <strong>outside - in</strong></li>
+        </ol>
+        </section>
+        </section>
 
-				// Display a presentation progress bar
-				progress: true,
+        <section>
+        <section>
+        <h2>BDD in Action</h2>
+        <p>
+        To facilitate BDD, RSpec builds a DSL to support the BDD nomenclature language:
+        <pre><code class='ruby'>
+        describe "after user submits a post" do
+          it "should create a new post" do
+          ...
+          end
+        end
+        </pre></code>
+        </p>
+        </section>
 
-				// If true; each slide will be pushed to the browser history
-				history: true,
+        <section>
+        <h2>BDD in Action</h2>
+        <p>
+        To facilitate BDD request specs, capybara aliases [describe] and [it] to [feature] and [scenario].
+        <pre><code class='ruby'>
+        feature "user posts" do
+          scenario "user creates a post" do
+          ...
+          end
+        end
+        </pre></code>
 
-				// Flags if mouse wheel navigation should be enabled
-				mouseWheel: true,
+        Scenarios are often larger in scope than simple it { } blocks.
+        </p>
+        </section>
 
-				// Apply a 3D roll to links on hover
-				rollingLinks: true,
+        <section>
+        <h2>BDD in Action</h2>
+        <p>
+        Demo time
+        </p>
+        </section>
+      </div>
 
-				// UI style
-				theme: query.theme || 'default', // default/neon
+      <!-- The navigational controls UI -->
+      <aside class="controls">
+      <a class="left" href="#">&#x25C4;</a>
+      <a class="right" href="#">&#x25BA;</a>
+      <a class="up" href="#">&#x25B2;</a>
+      <a class="down" href="#">&#x25BC;</a>
+      </aside>
 
-				// Transition style
-				transition: query.transition || 'default' // default/cube/page/concave/linear(2d)
-			});
+      <!-- Displays presentation progress, max value changes via JS to reflect # of slides -->
+      <div class="progress"><span></span></div>
 
-			hljs.initHighlightingOnLoad();
-		</script>
+    </div>
 
-	</body>
+    <script src="js/reveal.js"></script>
+    <script src="lib/highlight.js"></script>
+    <script>
+      // Parse the query string into a key/value object
+      var query = {};
+      location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) {
+        query[ a.split( '=' ).shift() ] = a.split( '=' ).pop();
+      } );
+
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // If true; each slide will be pushed to the browser history
+        history: true,
+
+        // Flags if mouse wheel navigation should be enabled
+        mouseWheel: true,
+
+        // Apply a 3D roll to links on hover
+        rollingLinks: true,
+
+        // UI style
+        theme: query.theme || 'default', // default/neon
+
+        // Transition style
+        transition: query.transition || 'default' // default/cube/page/concave/linear(2d)
+      });
+
+      hljs.initHighlightingOnLoad();
+    </script>
+
+  </body>
 </html>
