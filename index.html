@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<!--    <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'> -->
 
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/theme/default.css">
@@ -34,6 +34,109 @@
   </head>
 
   <body>
+
+    <script src="build/three.js"></script>
+    <script src="js/loaders/ColladaLoader.js"></script>
+    <script src="js/Detector.js"></script>
+
+	 <div id="background"/>
+<script>
+// RedHat background script
+// Added 6/Sep/2015 by John Boero - johnnyb@redhat.com
+var fedContainer;
+
+var fedCam, fedScene, fedRenderer;
+var target = new THREE.Vector3(-3, 3, 3);
+var particleLight, dae;
+var loader = new THREE.ColladaLoader();
+
+loader.options.convertUpAxis = true;
+
+// Use blue fedora model if Fedora
+// Note that I've not had good luck with json models. Use collada (dae).
+// You can import/edit/export from Blender.
+loader.load( 'models/fedora/fedora.dae', 
+//loader.load( 'models/fedora/redhat.dae', 
+	function ( collada )
+	{
+		dae = collada.scene;
+
+		dae.scale.x = dae.scale.y = dae.scale.z = 2;
+		dae.updateMatrix();
+	
+		fedInit();
+		fedAnimate();
+	}
+);
+
+function fedInit()
+{
+	fedContainer = document.getElementById( 'background' );
+
+	fedCam = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+	fedCam.position.set( 2, 2, 3 );
+
+	fedScene = new THREE.Scene();
+	fedScene.add( dae );
+
+	particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0x111111 } ) );
+	fedScene.add( particleLight );
+
+	//fedScene.add( new THREE.AmbientLight( 0x040404 ) );
+
+	var directionalLight = new THREE.DirectionalLight( 0x444444 );
+	directionalLight.position.x = -1;
+	directionalLight.position.y = 1;
+	directionalLight.position.z = 1;
+	directionalLight.position.normalize();
+	fedScene.add( directionalLight );
+	
+	var pointLight = new THREE.PointLight( 0x444444, 4 );
+	particleLight.add( pointLight );
+
+	fedRenderer = new THREE.WebGLRenderer( {alpha:true} );
+	fedRenderer.setPixelRatio( window.devicePixelRatio );
+	fedRenderer.setSize( window.innerWidth, window.innerHeight );
+	fedRenderer.setClearColor( 0x000000 );
+	fedContainer.appendChild( fedRenderer.domElement );
+
+	window.addEventListener( 'resize', fedOnWindowResize, false );
+	fedCam.position.x = fedCam.position.y = fedCam.position.z = 7;
+}
+
+function fedOnWindowResize()
+{
+	fedCam.aspect = window.innerWidth / window.innerHeight;
+	fedCam.updateProjectionMatrix();
+
+	fedRenderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function fedAnimate()
+{
+	var timer = Date.now() * 0.0005;
+	requestAnimationFrame( fedAnimate );
+
+	fedCam.lookAt( target );
+
+	particleLight.position.x = Math.sin( timer / 8 ) * 3009;
+	particleLight.position.y = Math.cos( timer / 7 ) * 4000;
+	particleLight.position.z = Math.cos( timer / 6 ) * 3009;
+
+	dae.rotateZ(0.0008 * Math.sin(timer / 18));
+	dae.rotateY(0.0009 * Math.cos(timer / 25));
+	dae.rotateZ(0.0011 * Math.sin(timer / 30));
+
+	fedRender();
+}
+
+function fedRender()
+{
+	fedRenderer.render( fedScene, fedCam );
+}
+
+</script>
+
     <div class="github-fork-ribbon-wrapper left-bottom">
       <div class="github-fork-ribbon">
           <a href="https://github.com/dimroc/reveal.js-threejs">Fork me on GitHub</a>
@@ -47,301 +150,49 @@
 
       <!-- Any section element inside of this container is displayed as a slide -->
       <div class="slides">
+		<section>
         <section>
-          <h1>WebGL with Three JS</h1>
-          <h3>Real time rendering with javascript</h3>
-          <canvas data-sample="spinning_wireframe_torus"></canvas>
+          <h3>Reveal.js + Three.js + Shadowman</h3>
+          <h2> = <br> Shadowman Reveal.js Theme</h2>
+			<img src="images/redhat-logo.png">
+			<h4><a href="mailto:johnnyb@redhat.com">JohnnyB@redhat.com</a></h4>
         </section>
 
         <section>
-          <h2>Rendering Techniques</h2>
+          <h3>Based on:</h3>
           <ul>
-            <li>
-            Rasterization
-            <blockquote style="width:90%">
-              The task of taking an image described in a vector graphics format (shapes)
-              and converting it into a raster image (pixels or dots)
-            </blockquote>
-            </li>
-            <br/>
-            <br/>
-            <li>Ray Casting</li>
-            <li>Ray Tracing</li>
+            <li><a href='https://github.com/hakimel/reveal.js'/>Reveal.js</a> by Hakim El Hattab</li>
+            <li><a href='https://github.com/dimroc/reveal.js-threejs'>Reveal.js-Three.js</a> by Dimitri Roche</li>
+				<li><a href='https://github.com/mrdoob/three.js/'>Three.js</a> by mrdoob</li>
           </ul>
         </section>
+		</section>
 
         <section>
           <section>
-            <h3>How do we get from<br/>vertices to a shape</h3>
-            <img class="float_left" style="display:inline" src="images/Vertices.png">
-            <div class="float_left" style="line-height: 8; padding: 20px">to</div>
-            <canvas data-sample="spinning_wireframe_cube" class="float_left" style="display:inline"></canvas>
-            <div class="float_left" style="line-height: 5; padding: 20px">?</div>
+            <h3>Features:</h3>
+				<ul>
+					<li>Backwards compatible with your existing Reveal.js presentations.</li>
+					<li>Full Three.js support (version r71)</li>
+					<li>Pre-loaded with royalty-free fedora model<br>
+						from <a href='http://www.turbosquid.com/'>http://www.turbosquid.com/</a> modeled by zbignev</li>
+					<li>Includes both RedHat (red) and Fedora (blue) models.</li>
+					<li>Perfect for presentations, wall kiosks, keynotes, booths.</li>
+				</ul>
           </section>
 
           <section>
-            <h2>What is a vertex?</h2>
-            <img class="white_bg" src="http://obviam.net/wp-content/uploads/2011/01/Vertices.png">
-          </section>
-
-          <section>
-            <h2>Model Space and World Space</h2>
-            <img src="http://robertokoci.com/images/posts/graphics/game/programming/matrix-unveiled/ObjectWorldSpace.png">
-            <!-- <img class="float_left" src="http://www.simulshop.com/product/nemethdesigns/ec135/tn_fsx2008-49-47.jpg" style="height: 70%"> -->
-          </section>
-
-          <section>
-            <h2>View Space</h2>
-            <img src="http://robertokoci.com/images/posts/graphics/game/programming/matrix-unveiled/WorldViewSpace.png">
-          </section>
-
-          <section>
-            <h2>Projection Space</h2>
-            <img src="http://robertokoci.com/images/posts/graphics/game/programming/matrix-unveiled/ProjectionMatrix.png">
-          </section>
-
-          <section>
-            <h2>End in 2D</h2>
-            <img src="images/3dproj01.gif">
-            <!-- <img class="white_bg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Axonometric_projection.svg/467px-Axonometric_projection.svg.png"> -->
-          </section>
-
-          <section>
-           <h2>Vertices to a shape</h2>
-            <img class="float_left" style="display:inline" src="images/Vertices.png">
-            <div class="float_left" style="line-height: 8; padding: 20px">to</div>
-            <canvas data-sample="spinning_wireframe_cube" class="float_left" style="display:inline"></canvas>
-          </section>
-
-          <section>
-            <h2>But how do we ...</h2>
-            <br/>
-            <h3>transform between spaces?</h3>
-            <img src="http://robertokoci.com/images/posts/graphics/game/programming/matrix-unveiled/ObjectWorldSpace.png">
-            <br/>
-            <blockquote style="width:100%">Model -&gt; World -&gt; View -&gt; Projection Space</blockquote>
-          </section>
-        </section>
-
-        <section>
-          <section>
-            <h2>Welcome to Linear Algebra</h2>
-            <img src="http://storiesbywilliams.files.wordpress.com/2012/05/transport.jpg">
-          </section>
-
-          <section>
-            <h3>2D Vertex, meet Matrix!</h3>
-            <p>Now multiply...</p>
-            <img class="float_left" src="http://tutorial.math.lamar.edu/Classes/LinAlg/LinearTransformations_files/image002.gif">
-            <br/>
-            <ol>
-              <li><img class="white_bg" src="images/matrix_multiplication_x_axis_start.png"></li>
-              <li class="fragment">
-                <img class="white_bg" src="images/matrix_multiplication_x_axis_x.png">
-                ( 1 * x ) + ( 0 * y ) = x
-              </li>
-              <li class="fragment">
-                <img class="white_bg" src="images/matrix_multiplication_x_axis_y.png">
-                ( 0 * x ) + ( -1 * y ) = -y
-              </li>
-            </ol>
-          </section>
-
-          <section>
-            <h3>Transformations</h3>
-            <br/>
-            <img class="float_left" src="images/SRT_transformations.png">
-            <ul style="width:100px;">
-              <li>
-                identity:<br/>
-                <img class="white_bg" style="width: 200px" src="images/identity_matrix.png">
-              </li>
-
-              <li>
-                scaling:<br/>
-                <img class="white_bg" style="width: 200px" src="http://upload.wikimedia.org/math/2/6/a/26a088adf02ba09dc958acba0e81a3c3.png">
-                <br/>
-              </li>
-
-              <li>
-                rotation:<br/>
-                <img class="white_bg" style="width: 200px" src="http://upload.wikimedia.org/math/4/b/d/4bd8fd7253c5bbd65c2e9f8fb7220b19.png">
-                <br/>
-              </li>
-            </ul>
-          </section>
-
-          <section>
-            <h2>Projection</h2>
-            <br/>
-            <pre style="width: 40%" class="math float_left">
-  [1, 0, 0] [x]   [x]
-  [0, 1, 0] [y] = [y]
-  [0, 0, 0] [z]   [0] </pre>
-            <p>* We lose a dimension!</p>
-            <img src="images/3dproj01.gif">
-          </section>
-
-          <section>
-            <h2>Composite Transformation</h2>
-            <p>Putting it all together</p>
-            <img class="white_bg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Axonometric_projection.svg/467px-Axonometric_projection.svg.png">
-            <blockquote>World_View_Projection_Matrix =<br/> World * View * Projection</blockquote>
-          </section>
-
-          <section>
-            <h2>Transformations + Projection</h2>
-            <img class="float_left" style="display:inline" src="images/Vertices.png">
-            <div class="float_left" style="line-height: 8; padding: 20px">to</div>
-            <canvas data-sample="spinning_wireframe_cube" style="display:inline"></canvas>
-            <p class="medium" style="font-size:24px;">----------------------------------
-            <br/>
-            Model * World_View_Projection_Matrix</p>
-          </section>
-        </section>
-
-        <section>
-          <section>
-            <h3>How do we get from<br/>a shape to colored pixels</h3>
-            <br/>
-            <br/>
-            <canvas data-sample="spinning_wireframe_cube" class="float_left"></canvas>
-            <div class="float_left" style="line-height: 8; padding: 20px">to</div>
-            <canvas data-sample="lighted_spinning_textured_cube" class="float_left"></canvas>
-            <div class="float_left" style="line-height: 8; padding: 20px">?</div>
-          </section>
-
-          <section>
-            <h2>Rasterization: Shapes -> Pixels</h2>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Rasterisation-triangle_example.svg/450px-Rasterisation-triangle_example.svg.png">
-          </section>
-
-          <section>
-            <h2>Texture: UV Mapping</h2>
-            <p>Getting the value of the color...<p>
-            <img src="http://www.bcu.ac.uk/_media/img/nti/gamer_camp/blog_postings/UvMapping.jpg">
-          </section>
-
-          <section>
-            <h2>Lighting</h2>
-            <p>Getting the strength of the color...</p>
-            <br/>
-            <h3>Ambient, Diffuse, Specular</h3>
-            <canvas class="float_left" data-sample="lighted_ambient_sphere"></canvas>
-            <canvas class="float_left" data-sample="lighted_diffuse_sphere"></canvas>
-            <canvas class="float_left" data-sample="lighted_specular_sphere"></canvas>
-          </section>
-
-          <section>
-            <h2>Materials</h2>
-            <canvas class="float_left" data-sample="lighted_sphere"></canvas>
-            <canvas data-sample="lighted_textured_sphere"></canvas>
-            <p>Combining all lighting and textures for the final color</p>
-          </section>
-
-          <section>
-            <h2>
-              Coloring the pixels:<br/>
-              Texture and Lighting
-            </h2>
-            <br/>
-            <canvas data-sample="spinning_wireframe_cube" class="float_left"></canvas>
-            <img class="float_left" style="width: 20%"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Rasterisation-triangle_example.svg/450px-Rasterisation-triangle_example.svg.png">
-            <canvas data-sample="lighted_spinning_textured_cube" class="float_left"></canvas>
-          </section>
-
-          <section>
-            <h2>But how do we ...</h2>
-            <br/>
-            <br/>
-            <h3>figure out the amount of light?</h3>
-            <blockquote>Putting the rgba in a pixel's RGBA</blockquote>
-          </section>
-        </section>
-
-        <section>
-          <section>
-            <h2>Welcome BACK to Linear Algebra</h2>
-            <br/>
-            <img src="http://cronwtf.github.com/images/wtf.jpg">
-          </section>
-
-          <section>
-            <h2>The Normal</h2>
-            <img class="white_bg" src="https://encrypted-tbn3.google.com/images?q=tbn:ANd9GcSQyYxnsLVkIT5QpVBGJ00IDOcIrLPMPUXIyabQYuXZQxOuIGKN">
-          </section>
-
-          <section>
-            <h2>Lighting</h2>
-            <img src="images/shader_vectors.gif">
-          </section>
-
-          <section>
-            <h2>The Dot Product</h2>
-            <!-- <img class="white_bg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Dot_Product.svg/300px-Dot_Product.svg.png"> -->
-            <img class="white_bg" src="http://cdn.wolfire.com/blog/linear/dotsimple.jpg">
-          </section>
-
-          <section>
-            <h2>Lighting</h2>
-            <img class="white_bg" src="http://math.hws.edu/graphicsnotes/c4/light_eq.png">
-            <br/>
-            <br/>
-            <ul>
-              <li>N * L = dot product</li>
-              <li>color.rgb * dot product = amount of color</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2>Lighting Demystified (somewhat)</h2>
-            <canvas data-sample="lighted_sphere"></canvas>
-          </section>
-        </section>
-
-        <section>
-          <section>
-            <h2>Graphic Pipelines: How it started</h2>
-            <h3>Software Rendering</h3>
-            <img style="width: 480px;" src="http://1.bp.blogspot.com/-tQMjfiveb88/T5HvOfXc63I/AAAAAAAAB38/P_Nmtyw7-v8/s1600/prince-of-persia.gif">
-            <ul>
-              <li>Entirely done on CPU</li>
-              <li>Unaided by graphics hardware</li>
-              <li>Ultimate flexibility</li>
-            </ul>
-          </section>
-
-          <section>
-            <h3>How it was: Fixed Function Pipeline</h3>
-            <img src="http://cdn.steampowered.com/v/gfx/apps/2310/0000002448.600x338.jpg?t=1343157013">
-            <img src="http://www.techspot.com/reviews/hardware/voodoo3-3000/box_p.jpg">
-            <small style="font-size: 10px; display: block;">I couldn't find an image of a voodoo 1 card</small>
-          </section>
-
-          <section>
-            <h3>How it was: Fixed Function Pipeline</h3>
-            <img src="http://www.many-core.group.cam.ac.uk/platforms/pipeline_big.png">
-            <ul>
-              <li>Introduction of GPU hardware support</li>
-              <li>Sacrificed flexibility for speed</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2>The Graphics Card</h2>
-            <img class="white_bg" src="http://www.sjbaker.org/wiki/images/thumb/3/31/Graphics_pipeline.png/800px-Graphics_pipeline.png">
-          </section>
-
-          <section>
-            <h3>How it is: Programmable Graphics Pipeline</h3>
-            <!-- <img src="http://chrisingradschool.files.wordpress.com/2010/03/screen-shot-2010-03-09-at-2-13-26-pm.png?w=600&h=279"> -->
-            <img src="http://www.many-core.group.cam.ac.uk/platforms/pipeline_big.png">
-          </section>
-
-          <section>
-            <h3>How it is: Programmable Graphics Pipeline</h3>
-            <img src="http://chrisingradschool.files.wordpress.com/2010/03/screen-shot-2010-03-09-at-2-13-26-pm.png?w=600&h=279">
+            <h2>Tricks, tips:</h2>
+				<ul>
+					<li>Kiosk/automatic mode:<br>
+					<code>
+					// Slide every 10 seconds (set in init at bottom of index.html)
+					Reveal.initialize({autoSlide: 10000});</code>
+					</li>
+					<li>
+					Custom background included in background div and corresponding script.
+					</li>
+				</ul>
           </section>
         </section>
 
@@ -707,7 +558,6 @@ var camera = new THREE.PerspectiveCamera(30, width/height, 1,1000);
 camera.position.set(0, 3, 7);
 camera.lookAt( new THREE.Vector3(0,0,0));
             </code></pre>
-            <img src="http://robertokoci.com/images/posts/graphics/game/programming/matrix-unveiled/ProjectionMatrix.png">
           </section>
 
           <section>
@@ -840,13 +690,6 @@ loader.load("js/meshes/Startrek_Enterprise.js", function(geometry, materials) {
   ...
             </code></pre>
           </section>
-
-          <section data-state="loaded_apache">
-            <h2>with Textures</h2>
-            <p>Credit for model goes to <a href="http://www.blendswap.com/?author=3134">Chris Kuhn</a></p>
-            <a href="images/FinalApacheTexture.png">Apache Texture File</a>
-            <canvas data-sample="load_apache"></canvas>
-          </section>
         </section>
 
         <section>
@@ -889,155 +732,6 @@ loader.load("js/meshes/Startrek_Enterprise.js", function(geometry, materials) {
               <li><a href="http://mrdoob.com/lab/javascript/webgl/particles/magicdust.html">Magic Dust Particles</a></li>
               <li><a href="http://www.html5rocks.com/en/tutorials/webgl/million_letters/million_letters.html">A Million Letters</a></li>
             </ul>
-          </section>
-        </section>
-
-        <section>
-          <section>
-            <h2>ThreeJS: Normal Mapping</h2>
-            <p>Using the RGB for your <b><u>normal's</u></b> XYZ</p>
-            <canvas data-sample="normal_mapped_plane" class="float_left" style="display:inline"></canvas>
-            <canvas data-sample="wireframe_plane" class="float_left" style="display:inline"></canvas>
-            <img src="images/normal_map_tile.jpg" class="float_left normal_map" style="width:200px">
-          </section>
-          <section>
-            <h3>Old school: Per Vertex Lighting</h3>
-            <canvas data-sample="per_vertex_lighting"></canvas>
-          </section>
-
-          <section>
-            <h2>New school: Per Pixel Lighting</h2>
-            <br/>
-            <img class="float_left" style="width: 25%"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Rasterisation-triangle_example.svg/450px-Rasterisation-triangle_example.svg.png">
-            <!-- <img style="width: 70%" src="images/reflection_vector.gif"> -->
-            <img class="white_bg" src="http://math.hws.edu/graphicsnotes/c4/light_eq.png">
-          </section>
-
-          <section>
-            <h2>Normal Map</h2>
-            <img src="images/normal_map_tile.jpg">
-          </section>
-
-          <section>
-            <h2>Normal Map</h2>
-            <canvas data-sample="normal_mapped_plane" class="float_left" style="display:inline"></canvas>
-            <canvas data-sample="wireframe_plane" class="float_left" style="display:inline"></canvas>
-            <img src="images/normal_map_tile.jpg" class="float_left normal_map" style="width:200px">
-          </section>
-
-          <section>
-            <h2>ThreeJS: Custom Shaders</h2>
-              <pre class="code medium"><code class="javascript">
-  // Grab shader code
-  var vertexShader = $('#normal_map_vs').text();
-  var fragmentShader = $('#normal_map_fs').text();
-
-  // Configure material parameters
-  var parameters = {
-    // Shaders
-    fragmentShader: fragmentShader,
-    vertexShader: vertexShader,
-
-    // Shader Data
-    uniforms: uniforms,
-    attributes: attributes
-  };
-
-  // Create custom shader material
-  var normal_material = new THREE.ShaderMaterial( parameters );
-
-  // Add mesh
-  var mesh = new THREE.Mesh( geometry, normal_material );
-  scene.add( mesh );
-              </code></pre>
-          </section>
-
-          <section>
-            <h2>Showcase: Skin Material</h2>
-            <a href="http://mrdoob.github.com/three.js/examples/webgl_materials_bumpmap_skin.html">WebGL Skin Material</a>
-          </section>
-        </section>
-
-        <section>
-          <section>
-            <h2>ThreeJS: Post-Processing</h2>
-            <br/>
-            <br/>
-            <canvas class="float_left" data-sample="spinning_textured_cube"></canvas>
-            <canvas data-sample="blur_post_process"></canvas>
-          </section>
-
-          <section>
-            <h2>Render to Texture</h2>
-            <canvas data-sample="render_to_texture"></canvas>
-            <pre class="code medium"><code class="javascript">
-  var renderTarget = new THREE.WebGLRenderTarget(
-    sample_defaults.width,
-    sample_defaults.height,
-    renderTargetParameters);
-    ...
-
-  renderer.render( worldScene, camera, renderTarget );
-  planeMaterial.uniforms[ "tDiffuse" ].texture = renderTarget;
-  renderer.render( planeScene, camera );
-            </code></pre>
-          </section>
-
-          <section>
-            <h2>2 Pass Blurring</h2>
-            <img src="http://www.gamerendering.com/wp-content/uploads/image13-bluring.jpg">
-          </section>
-
-          <section>
-            <p>Multiple passess...</p>
-            <br/>
-            <pre class="code medium"><code class="javascript">
-  var composer = new THREE.EffectComposer( renderer );
-
-  // 3 Passes...
-  var renderModel = new THREE.RenderPass(scene, camera);
-  var horizontalBlur = new THREE.ShaderPass(horizontalBlurShaders);
-  var verticalBlur = new THREE.ShaderPass(verticalBlurShaders);
-
-  verticalBlur.renderToScreen = true;
-
-  composer.addPass( renderModel );
-  composer.addPass( horizontalBlur );
-  composer.addPass( verticalBlur );
-
-  ...
-  // renderer.render( scene, camera ); REMOVED
-  composer.render(0.1);
-            </code></pre>
-          </section>
-
-          <section>
-            <h2>Showcase: Post-processing Filters</h2>
-            <a href="http://mrdoob.github.com/three.js/examples/webgl_postprocessing.html">Post Processing</a>
-          </section>
-        </section>
-
-        <section>
-          <section>
-            <h3>Shadow Maps</h3>
-            <canvas data-sample="shadow_map"></canvas>
-          </section>
-
-          <section>
-            <h3>Render to texture</h3>
-            <p>Render a snap shot from the perspective of the light</p>
-            <img class="float_left" style="width:50%"
-            src="http://download.autodesk.com/global/docs/motionbuilder2013/en-us/images/GUID-48D90406-3DCC-4CF6-9A20-6EEC0DD2FBBC-low.png">
-            <canvas data-sample="render_to_texture"></canvas>
-          </section>
-        </section>
-
-        <section>
-          <section>
-            <h3>Height Map in Vertex Buffer</h3>
-            <canvas data-sample="height_map_image"></canvas>
-            <canvas data-sample="particle_height_map"></canvas>
           </section>
         </section>
 
@@ -1212,7 +906,6 @@ loader.load("js/meshes/Startrek_Enterprise.js", function(geometry, materials) {
         "lib/js/dat.gui.js",
         "lib/js/EventEmitter.js",
 
-        "lib/js/three.js",
         "lib/js/three/EffectComposer.js",
         "lib/js/three/RenderPass.js",
         "lib/js/three/BloomPass.js",
@@ -1246,6 +939,10 @@ loader.load("js/meshes/Startrek_Enterprise.js", function(geometry, materials) {
             controls: true,
             progress: true,
             history: true,
+
+				// Adjust or comment this line for no auto-advance mode:
+				autoSlide: 10000,
+				loop: true,
 
             transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/linear(2d)
 

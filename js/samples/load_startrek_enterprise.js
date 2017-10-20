@@ -17,11 +17,11 @@
       scene = new THREE.Scene();
 
       camera = new THREE.PerspectiveCamera( 75, sample_defaults.width / sample_defaults.height, 1, 1000 );
-      camera.position.z = 100;
+      camera.position.z = 6;
 
       scene.add(createDirectionalLight({ position: camera.position }));
 
-      renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
+      renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: true });
       renderer.setSize( sample_defaults.width * 3, sample_defaults.height * 3);
 
       var instance = { active: false };
