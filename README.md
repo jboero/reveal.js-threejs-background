@@ -1,3 +1,5 @@
+Quickstart - To try this out (with a home dir for example), clone it into ~/public_html/ and make sure ownership matches your web server.  Then browse to index.html.
+
 # reveal.js
 
 A framework for easily creating beautiful presentations using HTML. [Check out the live demo](http://lab.hakim.se/reveal-js/).
